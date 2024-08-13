@@ -34,14 +34,18 @@ esp_err_t esp_wifi_deinit(void){
 
 esp_err_t esp_wifi_init(const wifi_init_config_t *config)
 {
-    printf("We have custom code\n");
+    printf("Called esp_wifi_init\n");
     if (s_wifi_inited) {
         return ESP_OK;
     }
 
     esp_err_t result = ESP_OK;
+    printf("esp_wifi_init: Called esp_wifi_power_domain_on\n");
     esp_wifi_power_domain_on();
+    printf("esp_wifi_init: Done esp_wifi_power_domain_on\n");
+    printf("esp_wifi_init: Called esp_wifi_init_internal\n");
     result = esp_wifi_init_internal(config);
+    printf("esp_wifi_init: Done esp_wifi_init_internal\n");
     if (result == ESP_OK) {
         esp_phy_modem_init();
         result = esp_supplicant_init();
@@ -52,7 +56,10 @@ esp_err_t esp_wifi_init(const wifi_init_config_t *config)
     } else {
         goto _deinit;
     }
+
+    printf("esp_wifi_init: Called adc2_cal_include\n");
     adc2_cal_include(); //This enables the ADC2 calibration constructor at start up.
+    printf("esp_wifi_init: Done adc2_cal_include\n");
 
     s_wifi_inited = true;
 
