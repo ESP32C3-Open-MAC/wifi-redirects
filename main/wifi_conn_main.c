@@ -365,9 +365,9 @@ const uint8_t packet[] = {
     0x00, 0x00, // Flags and fragment offset
     0x05, // TTL
     0x11, // Protocol type UDP 
-    0x33, 0x55, // Header checksum (update after calculating length of total packet)
+    0x33, 0x4a, // Header checksum (update after calculating length of total packet)
     0xc0, 0xa8, 0x00, 0x7A, // Source IP address - Arbitrary IP address for the ESP-32
-    0xc0, 0xa8, 0x00, 0xb7, // Destination IP address - Laptop's IP address (assigned through DHCP by the router)
+    0xc0, 0xa8, 0x00, 0xb8, // Destination IP address - Laptop's IP address (assigned through DHCP by the router)
 
     // UDP header - 8 bytes
     0x1f, 0x45, // Source port - Both source and destination ports are random since it is UDP
