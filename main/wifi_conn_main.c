@@ -70,6 +70,15 @@ typedef struct __attribute__((packed)) dma_list_item {
     printf("packet: %p\n", item->packet);\
 }
 
+#define PRINT_PACKET(item) {\
+    PRINT_DMA_LIST_ITEM(item);\
+    printf("Packet: ");\
+    for(int ii = 0; ii < item->length; ii++){\
+        printf("%02x ", *(uint8_t *)(item->packet + ii));\
+    }\
+    printf("\n");\
+}
+
 void ppRxPkt();
 
 void ppTxPkt(void* param1, int param2);
@@ -270,11 +279,8 @@ void rdr_mac_txq_enable(int slot){
     uint32_t plcp0_value = REG_READ(0x60033d08);
     printf("DMA struct written to PLCP0 register:\n");
     dma_list_item_t* dma_addr = (dma_list_item_t*)((plcp0_value & 0xfffff) | 0x3fc00000);
-    PRINT_DMA_LIST_ITEM(dma_addr);
-    for(uint16_t i = 0; i < dma_addr->length; i++){
-        printf("0x%02x ", *(uint8_t *)(dma_addr->packet + i));
-    }
-    printf("\n");
+    PRINT_PACKET(dma_addr);
+    
 #ifdef PRINT_ALL
     printf("Done hal_mac_txq_enable\n");
 #endif
@@ -351,9 +357,11 @@ uint32_t rdr_tx_set_htsig(uint32_t* param1, uint32_t param2){
 // }
 
 
+
+// // Hand crafted UDP packet
 const uint8_t packet[] = {
     // MAC layer
-    0xc8, 0x15, 0x4e, 0xd4, 0x65, 0x1b, // Destination MAC address
+    0xc8, 0x15, 0x4e, 0xd4, 0x65, 0x1b,
     0x84, 0xf7, 0x03, 0x60, 0x81, 0x5c, // Source MAC address
     0x08, 0x00, // protocol type - IPV4
     
@@ -377,6 +385,8 @@ const uint8_t packet[] = {
     'h', 'e', 'l', 'l', 'o' // The message :)
 
 };
+
+
 
 // Event handlers for connecting to the wifi. If event notifies that station is started, perform connection
 // esp_wifi_connect() is part of the blobs
