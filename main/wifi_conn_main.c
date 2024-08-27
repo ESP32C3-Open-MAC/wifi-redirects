@@ -70,14 +70,21 @@ typedef struct __attribute__((packed)) dma_list_item {
     printf("packet: %p\n", item->packet);\
 }
 
-#define PRINT_PACKET(item) {\
-    PRINT_DMA_LIST_ITEM(item);\
-    printf("Packet: ");\
-    for(int ii = 0; ii < item->length; ii++){\
-        printf("%02x ", *(uint8_t *)(item->packet + ii));\
+#define DUMP_MEMORY(addr, len) {\
+    for(int ii = 0; ii < len; ii++){\
+        printf("%02x ", *(uint8_t *)(addr + ii));\
     }\
     printf("\n");\
 }
+
+#define PRINT_PACKET(item) {\
+    PRINT_DMA_LIST_ITEM(item);\
+    printf("Packet: ");\
+    DUMP_MEMORY(item->packet, len);\
+    printf("\n");\
+}
+
+
 
 void ppRxPkt();
 
@@ -279,7 +286,7 @@ void rdr_mac_txq_enable(int slot){
     uint32_t plcp0_value = REG_READ(0x60033d08);
     printf("DMA struct written to PLCP0 register:\n");
     dma_list_item_t* dma_addr = (dma_list_item_t*)((plcp0_value & 0xfffff) | 0x3fc00000);
-    PRINT_PACKET(dma_addr);
+    DUMP_MEMORY(dma_addr->packet, 200);
     
 #ifdef PRINT_ALL
     printf("Done hal_mac_txq_enable\n");
