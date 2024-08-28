@@ -27,7 +27,7 @@ library. Depends on only FreeRTOS and the standard ESP32 libraries
 
 
 #define WIFI_QEMU
-#undef WIFI_QEMU
+// #undef WIFI_QEMU
 
 // Defining connection parameters
 #ifdef WIFI_QEMU
@@ -104,7 +104,7 @@ void hal_mac_tx_config_edca(int param_1);
 
 void hal_mac_clr_txq_state(int param_1,int param_2);
 
-uint32_t hal_mac_tx_set_ppdu(uint32_t *param_1);
+uint32_t hal_mac_tx_set_ppdu(uint32_t *param_1, uint32_t param_2);
 
 uint32_t mac_tx_set_plcp1(uint32_t* param1);
 
@@ -225,11 +225,13 @@ void rdr_mac_clr_txq_state(int param_1, int param_2){
 #endif
 }
 
-uint32_t rdr_mac_tx_set_ppdu(uint32_t *param_1){
+uint32_t rdr_mac_tx_set_ppdu(uint32_t *param_1, uint32_t param_2){
 #ifdef PRINT_ALL
     printf("Calling hal_mac_tx_set_ppdu\n");
+    printf("param_1 points to %08lx and param_2 is %08lx\n", *param_1, param_2);
+    DUMP_MEMORY(param_1, 100);
 #endif
-    uint32_t value = hal_mac_tx_set_ppdu(param_1);
+    uint32_t value = hal_mac_tx_set_ppdu(param_1, param_2);
 #ifdef PRINT_ALL
     printf("Done hal_mac_tx_set_ppdu\n");
 #endif
