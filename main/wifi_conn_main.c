@@ -25,22 +25,9 @@ library. Depends on only FreeRTOS and the standard ESP32 libraries
 #include "esp_err.h"
 #include "esp_log.h"
 
-
-#define WIFI_QEMU
-// #undef WIFI_QEMU
-
-// Defining connection parameters
-#ifdef WIFI_QEMU
-#define WIFI_SSID "Espressif"
-#define WIFI_PASS ""
-#else
-#define WIFI_SSID "ResPECT"
-#define WIFI_PASS "twoflower"
-#endif
+#include "sdkconfig.h"
 
 
-
-#define SCAN_AUTH_MODE_THRESHOLD ESP_WIFI_AUTH_WPA2_PSK // Not used since it is default
 #define MAX_RETRY 5
 
 // #undef PRINT_ALL
@@ -370,8 +357,8 @@ uint32_t rdr_tx_set_htsig(uint32_t* param1, uint32_t param2){
 // // Hand crafted UDP packet
 const uint8_t packet[] = {
     // MAC layer
-    0xc8, 0x15, 0x4e, 0xd4, 0x65, 0x1b,
-    0x84, 0xf7, 0x03, 0x60, 0x81, 0x5c, // Source MAC address
+    0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+    0xff, 0xff, 0xff, 0xff, 0xff, 0xff, // Source MAC address
     0x08, 0x00, // protocol type - IPV4
     
     // IPv4 header
@@ -449,8 +436,8 @@ void app_main(){
     // // Create WiFi configuration with defined SSID and PASSWORD
     wifi_config_t wifi_config = {
         .sta = {
-            .ssid = WIFI_SSID,
-            .password = WIFI_PASS,
+            .ssid = CONFIG_ESP_WIFI_SSID,
+            .password = CONFIG_ESP_WIFI_PASSWORD,
         },
     };
 
