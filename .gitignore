@@ -4,3 +4,4 @@ build/*
 temp/
 sdkconfig
 sdkconfig.ci
+test
